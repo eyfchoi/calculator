@@ -1,0 +1,44 @@
+* {
+    border: 1px red solid;
+}
+
+#calculator {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    width: 600px;
+    height: 800px;
+} 
+
+#screen {
+    display: flex;
+    flex: 1 0 0;
+    align-items: center;
+    justify-content: right;
+    font-size: 72px;
+}
+
+#button-panel {
+    display: flex;
+    flex: 5 0 0;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.key {
+    flex: 1 0 25%;
+    align-content: center;
+    height: 100px;
+}
+
+#zero {
+    flex: 1 0 50%;
+} 
+
+.number-key {
+    background-color: grey;
+}
+
+.operator-key {
+    background-color: turquoise;
+}
