@@ -1,5 +1,5 @@
-const keyTextArray = ["AC", "+/-", "%", "/", "7", "8", "9", "*", "4", "5", "6", "-", "1" ,"2", "3", "+", "0", ".", "="];
-const keyIdArray   = ["ac", "plus-minus", "percent", "slash", "seven", "eight", "nine", "asterisk", "four", "five", "six", "minus", "one" ,"two", "three", "plus", "zero", "period", "equal"];
+const keyTextArray = ["AC", "←", "%", "/", "7", "8", "9", "*", "4", "5", "6", "-", "1" ,"2", "3", "+", "0", ".", "="];
+const keyIdArray   = ["ac", "backspace", "percent", "slash", "seven", "eight", "nine", "asterisk", "four", "five", "six", "minus", "one" ,"two", "three", "plus", "zero", "period", "equal"];
 const calculator   = document.querySelector("#calculator");
 const screen       = document.querySelector("#screen");
 const buttonPanel  = document.querySelector("#button-panel");
@@ -10,19 +10,34 @@ let oprt = "";
 
 function operate(n1, n2, op)
 {
+    let res = 0;
+
     switch(op)
     {
         case "+":
-            return Number(n1) + Number(n2);
+            res = Number(n1) + Number(n2);
+            break;
         case "-":
-            return Number(n1) - Number(n2);
+            res = Number(n1) - Number(n2);
+            break;
         case "*":
-            return Number(n1) * Number(n2);
+            res = Number(n1) * Number(n2);
+            break;
         case "/":
-            return Number(n1) / Number(n2);
+            res = Number(n1) / Number(n2);
+            break;
         default:
-            return 0;
+            alert("Impossible!!");
+            return "";         
     }
+
+    if (isNaN(res))
+    {
+        alert("Very Sus...");
+        return "";
+    }
+
+    return String((Math.round(res * 1000000)) / 1000000)
 }
 
 for (let i = 0; i < keyTextArray.length; i++)
@@ -51,31 +66,106 @@ buttonPanel.addEventListener('click', (e) => {
     if (!isNum && !isOp) 
         return;
 
-    if (isNum)
-        if (oprt == "")
-            num1 += targ.textContent;
-        else 
-            num2 += targ.textContent;
+    if (targ.id == "ac")
+    {
+        num1 = "";
+        num2 = "";
+        oprt = "";
+        screen.textContent = "";
+        return;
+    }
 
-    if (isOp)
-        if (targ.id == "equal")
+    if (isNum)
+    {
+        if (!oprt)
         {
-            screen.textContent = String(operate(num1, num2, oprt));
-            num1 = "";
+            num1 += targ.textContent;
+            screen.textContent = num1;
+        }          
+        else 
+        {
+            num2 += targ.textContent;
+            screen.textContent = num2;
+        }
+
+        return;    
+    }
+
+    if (targ.id == "period")
+    {
+        if (!oprt)
+        {
+            if (!num1.includes("."))
+            {
+                num1 += targ.textContent;
+                screen.textContent = num1;
+            }
+        }          
+        else 
+        {
+            if (!num2.includes("."))
+            {
+                num2 += targ.textContent;
+                screen.textContent = num2;
+            }
+        }
+
+        return;   
+    }
+
+    if (targ.id == "backspace")
+        {
+            if (!oprt)
+            {
+                if (num1)
+                {
+                    num1 = num1.slice(0, -1);
+                    screen.textContent = num1;
+                }
+            }          
+            else 
+            {
+                if (num2)
+                {
+                    num2 = num2.slice(0, -1);
+                    screen.textContent = num2;
+                }
+            }
+    
+            return;   
+        }
+
+    if (targ.id == "equal")
+    {
+        if ((num1 && num2 && oprt))
+        {
+            num1 = operate(num1, num2, oprt);
             num2 = "";
             oprt = "";
-            return;
+            screen.textContent = num1;
         }
-        else if (targ.id == "ac")
-        {
-            num1 = "";
-            num2 = "";
-            oprt = "";
-        }
-        else
-        {
-            oprt += targ.textContent;
-        }
-        
-    screen.textContent = num1 + oprt + num2;
+
+        return;
+    }
+ 
+    if (!oprt)
+    {
+        oprt = targ.textContent;
+        screen.textContent = "";
+        return;
+    }
+
+    if (!num1 || !num2)
+        return;
+
+    if ((num1 && num2 && oprt))
+    {
+        num1 = operate(num1, num2, oprt);
+        num2 = "";
+        oprt = targ.textContent;
+        screen.textContent = num1;
+        return;
+    }
+
+    return;
 });
