@@ -55,6 +55,7 @@ for (let i = 0; i < keyTextArray.length; i++)
     buttonPanel.appendChild(button);   
 }
 
+
 buttonPanel.addEventListener('click', (e) => {
     
     const targ  = e.target;
@@ -168,4 +169,23 @@ buttonPanel.addEventListener('click', (e) => {
     }
 
     return;
+});
+
+document.addEventListener('keydown', (e) => {
+
+    let q = "";
+    switch(e.key)
+    {
+        case "0":
+            q = "#zero";
+            break;
+        case "1":
+            q = "#one";
+            break;
+        default:
+            return;
+    }
+
+    console.log(document.querySelector(q));
+    document.querySelector(q).dispatchEvent(new Event('click', {bubbles: true}));
 });
