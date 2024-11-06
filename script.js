@@ -37,7 +37,12 @@ function operate(n1, n2, op)
         return "";
     }
 
-    return String((Math.round(res * 1000000)) / 1000000)
+    res = (Math.round(res * 1000000)) / 1000000;
+
+    if (res.toString().length >= 15)
+        return String(res.toExponential(4));
+
+    return res;
 }
 
 for (let i = 0; i < keyTextArray.length; i++)
@@ -62,8 +67,6 @@ buttonPanel.addEventListener('click', (e) => {
     const isNum = targ.classList.contains("number-key");
     const isOp  = targ.classList.contains("operator-key")
 
-    console.log(targ.id + " " + targ.classList);
-
     if (!isNum && !isOp) 
         return;
 
@@ -78,6 +81,9 @@ buttonPanel.addEventListener('click', (e) => {
 
     if (isNum)
     {
+        if (screen.textContent.length >= 15)
+            return;
+
         if (!oprt)
         {
             num1 += targ.textContent;
@@ -90,6 +96,28 @@ buttonPanel.addEventListener('click', (e) => {
         }
 
         return;    
+    }
+
+    if (targ.id == "percent")
+    {
+        if (!oprt)
+        {
+            if (num1)
+            {
+                num1 = num1 / 100;
+                screen.textContent = num1;
+            }
+        }          
+        else 
+        {
+            if (num2)
+            {
+                num2 = num2 / 100;
+                screen.textContent = num2;
+            }
+        }
+
+        return;   
     }
 
     if (targ.id == "period")
@@ -115,26 +143,26 @@ buttonPanel.addEventListener('click', (e) => {
     }
 
     if (targ.id == "backspace")
+    {
+        if (!oprt)
         {
-            if (!oprt)
+            if (num1)
             {
-                if (num1)
-                {
-                    num1 = num1.slice(0, -1);
-                    screen.textContent = num1;
-                }
-            }          
-            else 
-            {
-                if (num2)
-                {
-                    num2 = num2.slice(0, -1);
-                    screen.textContent = num2;
-                }
+                num1 = num1.slice(0, -1);
+                screen.textContent = num1;
             }
-    
-            return;   
+        }          
+        else 
+        {
+            if (num2)
+            {
+                num2 = num2.slice(0, -1);
+                screen.textContent = num2;
+            }
         }
+
+        return;   
+    }
 
     if (targ.id == "equal")
     {
@@ -182,10 +210,61 @@ document.addEventListener('keydown', (e) => {
         case "1":
             q = "#one";
             break;
+        case "2":
+            q = "#two";
+            break;
+        case "3":
+            q = "#three";
+            break;
+        case "4":
+            q = "#four";
+            break;
+        case "5":
+            q = "#five";
+            break;
+        case "6":
+            q = "#six";
+            break;
+        case "7":
+            q = "#seven";
+            break;
+        case "8":
+            q = "#eight";
+            break;
+        case "9":
+            q = "#nine";
+            break;
+        case "Escape":
+            q = "#ac";
+            break;
+        case "Backspace":
+            q = "#backspace";
+            break;
+        case "\\":
+            q = "#slash";
+            break;
+        case "*":
+            q = "#asterisk";
+            break;
+        case "-":
+            q = "#minus";
+            break;
+        case "+":
+            q = "#plus";
+            break;
+        case ".":
+            q = "#period";
+            break;
+        case "%":
+            q = "#percent";
+            break;
+        case "=":
+        case "Enter":
+            q = "#equal";
+            break;
         default:
             return;
     }
 
-    console.log(document.querySelector(q));
     document.querySelector(q).dispatchEvent(new Event('click', {bubbles: true}));
 });
